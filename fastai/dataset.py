@@ -52,7 +52,7 @@ def resize_imgs(fnames, targ, path, new_path):
     return os.path.join(path,new_path,str(targ))
 
 def read_dir(path, folder):
-  """ Returns a list of relative file paths to `path` for all files within `folder` """
+    """ Returns a list of relative file paths to `path` for all files within `folder` """
     full_path = os.path.join(path, folder)
     fnames = glob(f"{full_path}/*.*")
     if any(fnames):
@@ -83,16 +83,15 @@ def n_hot(ids, c):
     return res
 
 def folder_source(path, folder):
-  """
-  Returns the filenames and labels for a folder within a path
-  
-  Returns:
-  -------
-  fnames: a list of the filenames within `folder`
-  all_lbls: a list of all of the labels in `folder`, where the # of labels is determined by the # of directories within `folder`
-  lbl_arr: a numpy array of the label indices in `all_lbls`
-  
-  """
+    """
+    Returns the filenames and labels for a folder within a path
+    
+    Returns:
+    -------
+    fnames: a list of the filenames within `folder`
+    all_lbls: a list of all of the labels in `folder`, where the # of labels is determined by the # of directories within `folder`
+    lbl_arr: a numpy array of the label indices in `all_lbls`
+    """
     fnames, lbls, all_lbls = read_dirs(path, folder)
     lbl2idx = {lbl:idx for idx,lbl in enumerate(all_lbls)}
     idxs = [lbl2idx[lbl] for lbl in lbls]
@@ -452,6 +451,8 @@ class ImageClassifierData(ImageData):
         Returns:
             ImageClassifierData
         """
+        assert not (tfms[0] is None or tfms[1] is None), "please provide transformations for your train and validation sets"
+        assert not (os.path.isabs(folder)), "folder needs to be a relative path"
         fnames,y,classes = csv_source(folder, csv_fname, skip_header, suffix, continuous=continuous)
         return cls.from_names_and_array(path, fnames, y, classes, val_idxs, test_name,
                 num_workers=num_workers, suffix=suffix, tfms=tfms, bs=bs, continuous=continuous)
